@@ -1,10 +1,10 @@
 {
   "name": "axios-parallel",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Multithreaded async requests sender using Axios, Async & Workers",
   "main": "index.js",
   "scripts": {
-    "test": "node example.js"
+    "test": "node ."
   },
   "author": {
     "name": "Jove Jonovski",

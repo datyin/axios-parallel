@@ -32,7 +32,7 @@
   },
   "homepage": "https://github.com/datyin/axios-parallel#readme",
   "license": "MIT",
-  "devDependencies": {
+  "dependencies": {
     "async": "^3.2.0",
     "axios": "^0.19.2"
   }

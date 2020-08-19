@@ -1,0 +1,39 @@
+{
+  "name": "axios-parallel",
+  "version": "1.0.0",
+  "description": "Multithreaded async requests sender using Axios, Async & Workers",
+  "main": "index.js",
+  "scripts": {
+    "test": "node example.js"
+  },
+  "author": {
+    "name": "Jove Jonovski",
+    "email": "jovejonovski@gmail.com"
+  },
+  "keywords": [
+    "axios",
+    "async",
+    "parallel",
+    "multi-requests",
+    "requests",
+    "fetch",
+    "xhr",
+    "http",
+    "ajax",
+    "promise",
+    "node"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/datyin/axios-parallel.git"
+  },
+  "bugs": {
+    "url": "https://github.com/datyin/axios-parallel/issues"
+  },
+  "homepage": "https://github.com/datyin/axios-parallel#readme",
+  "license": "MIT",
+  "devDependencies": {
+    "async": "^3.2.0",
+    "axios": "^0.19.2"
+  }
+}

@@ -1,5 +1,7 @@
 # Send Asynchronous Requests
-Send multiple asynchronous requests using [Axios](https://github.com/axios/axios), [Async](https://caolan.github.io/async/v3/docs.html#parallelLimit) &amp; [Workers](https://nodejs.org/api/worker_threads.html)
+Send multiple asynchronous requests using [Axios](https://github.com/axios/axios), [Async](https://caolan.github.io/async/v3/docs.html#parallelLimit) &amp; [Workers](https://nodejs.org/api/worker_threads.html) in NodeJS
+
+> NOTE: This module is meant for [Node.JS](https://nodejs.org/) applications, not Web Browser.
 
 # Installation
 `npm install axios-parallel --save`

@@ -2,6 +2,8 @@ const { cpus } = require('os');
 const { Worker } = require('worker_threads');
 const { existsSync } = require('fs');
 
+const DEFAULT_LIMIT = 30;
+
 function chunkify(array) {
   const result = [];
 
@@ -23,12 +25,19 @@ function chunkify(array) {
  * @param {number} limit requests per cpu (default: 30)
  * @return {array}
  */
-function onRequest(requests, limit = 30) {
+function onRequest(requests, limit = DEFAULT_LIMIT) {
   return new Promise((resolve) => {
     const workerFile = `${__dirname}/thread.js`;
 
     if (!existsSync(workerFile)) {
       throw new Error('[Axios Parallel] Missing worker file:', workerFile);
+    }
+
+    // Validate limit
+    limit = Number(limit);
+
+    if (!Number.isFinite(limit) || limit < 1) {
+      limit = DEFAULT_LIMIT;
     }
 
     let done = 0;

@@ -7,6 +7,10 @@ function prepare(input) {
 
   if (input && Array.isArray(input)) {
     input.forEach((request) => {
+      if (!request.url || !request.url.trim()) {
+        return;
+      }
+
       tasks.push(function (callback) {
         axios(request)
           .then((response) => {

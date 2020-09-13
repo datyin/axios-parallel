@@ -39,9 +39,6 @@
     "url": "https://github.com/datyin/axios-parallel/issues"
   },
   "homepage": "https://github.com/datyin/axios-parallel#readme",
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
-  },
   "keywords": [
     "axios",
     "async",

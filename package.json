@@ -9,7 +9,7 @@
     "test": "node test/index.js"
   },
   "engines": {
-    "node": "10.x"
+    "node": ">=10.x"
   },
   "devDependencies": {
     "@tsconfig/node12": "^1.0.7",

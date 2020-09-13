@@ -1,6 +1,6 @@
 {
   "name": "axios-parallel",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Multithreaded async requests sender using Axios, Async & Workers",
   "main": "dist/index.js",
   "scripts": {

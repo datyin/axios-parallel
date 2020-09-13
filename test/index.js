@@ -1,14 +1,4 @@
-# Send Asynchronous Requests
-Send multiple asynchronous requests using [Axios](https://github.com/axios/axios) &amp; [Workers](https://nodejs.org/api/worker_threads.html) in NodeJS
-
-> NOTE: This module is meant for [Node.JS](https://nodejs.org/) applications, not Web Browser.
-
-# Installation
-`npm install axios-parallel --save`
-
-# Usage
-```javascript
-const axiosParallel = require('axios-parallel');
+const axiosParallel = require('../dist/index.js');
 const { writeFileSync } = require('fs');
 
 console.log('Start...');
@@ -27,8 +17,8 @@ console.log('Start...');
   }
 
   try {
-    const MAX_PARALLEL_REQUEST_PER_CPU = 30;
-    const response = await axiosParallel(requests, MAX_PARALLEL_REQUEST_PER_CPU);
+    const MAX_ASYNC_REQUEST_PER_CPU = 30;
+    const response = await axiosParallel(requests, MAX_ASYNC_REQUEST_PER_CPU);
 
     writeFileSync('example.response.json', JSON.stringify(response), {
       encoding: 'utf8'
@@ -39,7 +29,4 @@ console.log('Start...');
     const end = new Date() - start;
     console.log(`Execution time: ${end}ms`);
   }
-
-  console.log('Done');
 })();
-```

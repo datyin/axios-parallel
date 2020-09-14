@@ -1,23 +1,21 @@
 {
   "name": "axios-parallel",
   "version": "1.0.5",
-  "description": "Multithreaded async requests sender using Axios, Async & Workers",
+  "description": "Multithreaded async requests sender using Axios & Workers",
   "main": "dist/index.js",
   "scripts": {
     "build": "webpack",
-    "dev": "tsnd --respawn src/index.ts",
     "test": "node test/index.js"
   },
   "engines": {
-    "node": ">=10.x"
+    "node": ">=10.3.x"
   },
   "devDependencies": {
-    "@tsconfig/node12": "^1.0.7",
+    "@tsconfig/node10": "^1.0.7",
     "@types/node": "^14.10.1",
     "clean-webpack-plugin": "^3.0.0",
     "ts-loader": "^8.0.3",
     "ts-node": "^9.0.0",
-    "ts-node-dev": "^1.0.0-pre.62",
     "typescript": "^4.0.2",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12",

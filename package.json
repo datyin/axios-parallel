@@ -38,16 +38,21 @@
   },
   "homepage": "https://github.com/datyin/axios-parallel#readme",
   "keywords": [
-    "axios",
-    "async",
-    "parallel",
-    "multi-requests",
-    "requests",
-    "fetch",
-    "xhr",
-    "http",
     "ajax",
+    "async",
+    "axios",
+    "backend",
+    "fetch",
+    "http",
+    "multi-requests",
+    "multi-threaded",
+    "node",
+    "parallel",
     "promise",
-    "node"
+    "request",
+    "scrape",
+    "thread",
+    "worker",
+    "xhr"
   ]
 }

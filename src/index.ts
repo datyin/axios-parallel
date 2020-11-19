@@ -8,14 +8,14 @@ import toFinite from './toFinite';
 const CPUs = cpus().length || 1;
 const WORKER_PATH = path.resolve(__dirname, 'fetch.worker.js');
 
-export interface FetchResponse {
+interface FetchResponse {
   request: AxiosRequestConfig;
   data?: any;
   headers?: any;
   error?: string;
 }
 
-export function fetch(
+function fetch(
   input: AxiosRequestConfig | AxiosRequestConfig[],
   limit = 25
 ): Promise<FetchResponse[]> {
@@ -87,3 +87,5 @@ export function fetch(
     }
   });
 }
+
+export = fetch;

@@ -1,56 +1,68 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { cpus } from 'os';
+import axios, { AxiosRequestConfig } from 'axios';
 import { Worker } from 'worker_threads';
-import { existsSync } from 'fs';
-import { AxiosRequestConfig } from 'axios';
-import { DEFAULT_ASYNC_REQUEST_LIMIT, isNotEmptyArray, toFinite } from './common';
+import * as path from 'path';
+import toFinite from './toFinite';
 
-const CPU_NUM = cpus().length;
+const CPUs = cpus().length || 1;
+const WORKER_PATH = path.resolve(__dirname, 'fetch.worker.js');
 
-interface AxiosParallelResponse<> {
+export interface FetchResponse {
   request: AxiosRequestConfig;
   data?: any;
   headers?: any;
   error?: string;
 }
 
-/**
- * Send Requests
- *
- * @param {array} requests
- * @param {number} limit requests per cpu (default: 30)
- * @return {array}
- */
-
-function axiosParallel(requests: AxiosRequestConfig[], limit = DEFAULT_ASYNC_REQUEST_LIMIT) {
-  return new Promise<AxiosParallelResponse[]>((resolve) => {
-    const pszWorkerFile = `${__dirname}/thread.worker.js`;
-
-    if (!existsSync(pszWorkerFile)) {
-      throw new Error(`[Axios Parallel] Missing worker file: ${pszWorkerFile}`);
+export function fetch(
+  input: AxiosRequestConfig | AxiosRequestConfig[],
+  limit = 25
+): Promise<FetchResponse[]> {
+  return new Promise((resolve) => {
+    if (!Array.isArray(input)) {
+      input = [input];
     }
 
-    let done = 0;
+    // Validate requests
+    const requests: AxiosRequestConfig[] = input.filter((req) => req?.url?.trim() !== '');
 
-    const results: AxiosParallelResponse[] = [];
-    const groups: any = [];
+    if (!requests.length) {
+      console.error('[Fetch] Empty or not valid input.');
+      return resolve([]);
+    }
 
-    // Split array into chunks based on CPU cores
-    if (isNotEmptyArray(requests)) {
-      for (let i = CPU_NUM; i > 0; i--) {
+    if (requests.length > 1) {
+      const threads = [];
+
+      // Chunk
+      for (let i = CPUs; i > 0; i--) {
         const group = requests.splice(0, Math.ceil(requests.length / i));
 
-        if (isNotEmptyArray(group)) {
-          groups.push(group);
+        if (group.length) {
+          threads.push(group);
         }
       }
-    }
 
-    if (groups.length) {
-      groups.forEach((group: AxiosRequestConfig[]) => {
-        const worker = new Worker(pszWorkerFile);
+      if (!threads.length) {
+        console.error('[Fetch] failed to split requests on threads.');
+        return resolve([]);
+      }
+
+      let done = 0;
+      const results: any[] = [];
+
+      // Start Worker
+      threads.forEach((thread) => {
+        const worker = new Worker(WORKER_PATH, {
+          workerData: {
+            requests: thread,
+            limit: toFinite(limit) || 25
+          }
+        });
 
         worker.once('message', (response) => {
-          if (response && Array.isArray(response) && response.length) {
+          if (Array.isArray(response) && response.length) {
             response.forEach((res) => results.push(res));
           }
         });
@@ -59,20 +71,19 @@ function axiosParallel(requests: AxiosRequestConfig[], limit = DEFAULT_ASYNC_REQ
           worker.unref();
           done++;
 
-          if (done === groups.length) {
+          if (done === threads.length) {
             resolve(results);
           }
         });
-
-        worker.postMessage({
-          requests: group,
-          limit: toFinite(limit) || DEFAULT_ASYNC_REQUEST_LIMIT
-        });
       });
     } else {
-      resolve(results);
+      axios(requests[0])
+        .then((res) => {
+          resolve([{ request: requests[0], data: res.data, headers: res.headers }]);
+        })
+        .catch((error) => {
+          resolve([{ request: requests[0], error: error.message }]);
+        });
     }
   });
 }
-
-export = axiosParallel;

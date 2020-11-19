@@ -1,18 +1,17 @@
 {
-  "extends": "@tsconfig/node10/tsconfig.json",
   "compilerOptions": {
-    "declaration": true,
+    "target": "es2017",
+    "module": "commonjs",
+    "lib": ["es2017"],
+    "declaration": false,
+    "removeComments": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
     "outDir": "./dist",
     "rootDir": "./src",
-    "removeComments": true,
-    "alwaysStrict": false,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
     "baseUrl": "./src",
-    "typeRoots": ["./src/@types", "./node_modules/@types"]
-  },
-  "include": ["./src/**/*"],
-  "exclude": ["node_modules", "dist"]
+    "typeRoots": ["./src/typings", "./node_modules/@types"]
+  }
 }

@@ -1,20 +1,16 @@
 const path = require('path');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const node_modules = require('webpack-node-externals');
 
 module.exports = {
-  mode: 'production',
+  target: 'node8.10',
   entry: {
     ['index']: './src/index.ts',
-    ['thread.worker']: './src/thread.worker.ts'
+    ['fetch.worker']: './src/fetch.worker.ts'
   },
-  target: 'node',
-  externals: [node_modules()],
-  plugins: [new CleanWebpackPlugin()],
-  node: {
-    global: false,
-    __filename: false,
-    __dirname: false
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: '[name].js',
+    libraryTarget: 'commonjs2'
   },
   module: {
     rules: [
@@ -25,12 +21,17 @@ module.exports = {
       }
     ]
   },
-  resolve: {
-    extensions: ['.ts']
+  watchOptions: {
+    aggregateTimeout: 200,
+    ignored: ['node_modules/**', 'compiler.js']
   },
-  output: {
-    filename: '[name].js',
-    path: path.resolve(__dirname, 'dist'),
-    libraryTarget: 'commonjs2'
+  resolve: {
+    extensions: ['.tsx', '.ts']
+  },
+  externals: [node_modules()],
+  node: {
+    global: false,
+    __filename: false,
+    __dirname: false
   }
 };

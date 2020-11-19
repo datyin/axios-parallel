@@ -1,20 +1,26 @@
 # Send Asynchronous Requests
+
 Send multiple asynchronous requests using [Axios](https://github.com/axios/axios) &amp; [Workers](https://nodejs.org/api/worker_threads.html) in NodeJS
 
 > NOTE: This module is meant for [Node.JS](https://nodejs.org/) applications, not Web Browser.
 
 # Installation
-`npm install axios-parallel --save`
+
+`npm install axios axios-parallel --save`
 
 # Usage
+
 ```javascript
 const axiosParallel = require('axios-parallel');
+
+// Debug
+const { performance } = require('perf_hooks');
 const { writeFileSync } = require('fs');
 
 console.log('Start...');
 
 (async () => {
-  const start = new Date();
+  const start = performance.now();
   const requests = [];
 
   // https://jsonplaceholder.typicode.com/posts
@@ -35,11 +41,9 @@ console.log('Start...');
     });
   } catch (error) {
     throw new Error(error);
-  } finally {
-    const end = new Date() - start;
-    console.log(`Execution time: ${end}ms`);
   }
 
-  console.log('Done');
+  const end = performance.now() - start;
+  console.log(`Execution time: ${end}ms`);
 })();
 ```

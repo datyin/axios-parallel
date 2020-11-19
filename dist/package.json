@@ -4,10 +4,6 @@
   "description": "Multithreaded async requests sender using Axios & Workers",
   "main": "index.js",
   "typings": "./index.d.ts",
-  "scripts": {
-    "dev": "node ./compiler.js --dev",
-    "build": "node ./compiler.js"
-  },
   "author": {
     "name": "Jove Jonovski",
     "email": "jovejonovski@gmail.com"
@@ -16,28 +12,6 @@
     "node": ">=8.10.0"
   },
   "license": "MIT",
-  "devDependencies": {
-    "@types/fs-extra": "^9.0.4",
-    "@types/lodash": "^4.14.165",
-    "@types/node": "^14.14.9",
-    "@types/yargs": "^15.0.10",
-    "@typescript-eslint/eslint-plugin": "^4.8.1",
-    "@typescript-eslint/parser": "^4.8.1",
-    "axios": "^0.21.0",
-    "chalk": "^4.1.0",
-    "eslint": "^7.13.0",
-    "eslint-config-prettier": "^6.15.0",
-    "eslint-plugin-prettier": "^3.1.4",
-    "fs-extra": "^9.0.1",
-    "lodash": "^4.17.20",
-    "prettier": "^2.1.2",
-    "ts-loader": "^8.0.11",
-    "typescript": "^4.0.5",
-    "webpack": "^5.6.0",
-    "webpack-node-externals": "^2.5.2",
-    "yargs": "^16.1.1"
-  },
-  "dependencies": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/datyin/axios-parallel.git"
@@ -63,5 +37,6 @@
     "thread",
     "worker",
     "xhr"
-  ]
+  ],
+  "dependencies": {}
 }

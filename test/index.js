@@ -1,21 +1,29 @@
-# Send Asynchronous Requests
+/* eslint-disable @typescript-eslint/no-var-requires */
+let axiosParallel = null;
 
-Send multiple asynchronous requests using [Axios](https://github.com/axios/axios) &amp; [Workers](https://nodejs.org/api/worker_threads.html) in NodeJS
+try {
+  axiosParallel = require('../bundle/index');
+} catch (ex) {
+  /* */
+}
 
-> NOTE: This module is meant for [Node.JS](https://nodejs.org/) applications, not Web Browser.
+try {
+  axiosParallel = require('../dist/index');
+} catch (ex) {
+  /* */
+}
 
-# Installation
-
-`npm install axios axios-parallel --save`
-
-# Usage
-
-```javascript
-const axiosParallel = require('axios-parallel');
+if (!axiosParallel) {
+  console.error('Failed to find axios module');
+  process.exit(1);
+}
 
 // Debug
 const { performance } = require('perf_hooks');
 const { writeFileSync } = require('fs');
+const { join } = require('path');
+
+const EXAMPLE_PATH = join(__dirname, 'example.response.json');
 
 console.log('Start...');
 
@@ -36,9 +44,7 @@ console.log('Start...');
     const MAX_PARALLEL_REQUEST_PER_CPU = 30;
     const response = await axiosParallel(requests, MAX_PARALLEL_REQUEST_PER_CPU);
 
-    writeFileSync('example.response.json', JSON.stringify(response), {
-      encoding: 'utf8'
-    });
+    writeFileSync(EXAMPLE_PATH, JSON.stringify(response), { encoding: 'utf8' });
   } catch (error) {
     throw new Error(error);
   }
@@ -46,4 +52,3 @@ console.log('Start...');
   const end = performance.now() - start;
   console.log(`Execution time: ${end}ms`);
 })();
-```

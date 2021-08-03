@@ -1,17 +1,33 @@
 {
   "compilerOptions": {
     "target": "es2017",
-    "module": "commonjs",
     "lib": ["es2017"],
-    "declaration": false,
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "outDir": "./dist/",
+    "rootDir": "./src/",
     "removeComments": true,
-    "strict": true,
+    "alwaysStrict": false,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "noPropertyAccessFromIndexSignature": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "baseUrl": "./src",
-    "typeRoots": ["./src/typings", "./node_modules/@types"]
-  }
+    "allowSyntheticDefaultImports": true,
+    "typeRoots": ["./src/typings", "./node_modules/@types"],
+    "baseUrl": "./",
+    "paths": {}
+  },
+  "include": ["./src/**/*.ts"],
+  "exclude": ["**/node_modules", "**/*.spec.ts", "**/bundle"]
 }

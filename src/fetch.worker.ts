@@ -1,61 +1,83 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/**
- * Credits: karataev
- * https://github.com/karataev/fetch-data-patterns/blob/master/src/helpers.js
- */
-import axios, { AxiosRequestConfig } from 'axios';
 import { workerData, parentPort } from 'worker_threads';
-import toFinite from './toFinite';
+import axios, { AxiosRequestConfig } from 'axios';
+import { arr, num, str, bool } from './util/primitives';
+import { AxiosParallelResponse, AxiosParallelResponseDetails } from './schema/response';
 
-async function fetch(req: AxiosRequestConfig) {
+const requests: AxiosRequestConfig[] = workerData?.requests || [];
+const limit = workerData?.limit && workerData.limit >= 2 ? workerData.limit : 2;
+
+function parseRequest(input: unknown): AxiosParallelResponseDetails {
+  return {
+    aborted: bool(input, 'aborted'),
+    finished: bool(input, 'finished'),
+    host: str(input, 'host'),
+    method: str(input, 'method'),
+    path: str(input, 'path'),
+    protocol: str(input, 'protocol'),
+    responseUrl: str(input, 'res.responseUrl'),
+    redirects: arr(input, 'res.redirects') as string[],
+    statusCode: num(input, 'res.statusCode'),
+    statusMessage: str(input, 'res.statusMessage')
+  };
+}
+
+async function fetch(req: AxiosRequestConfig): Promise<AxiosParallelResponse> {
   try {
     const res = await axios(req);
-    return { request: req, data: res.data, headers: res.headers };
+    const details = parseRequest(res.request);
+
+    return { request: req, data: res.data, headers: res.headers, details };
   } catch (error) {
-    return { request: req, error: error.message };
+    const details = parseRequest(error.request);
+    return { request: req, details, error: error?.message ?? 'Unknown Error' };
   }
 }
 
-async function series(items: AxiosRequestConfig[], fn: any) {
-  const result: any[] = [];
+type FN = (item: AxiosRequestConfig[]) => unknown;
+
+async function series(items: Array<AxiosRequestConfig[]>, fn: FN): Promise<AxiosParallelResponse[]> {
+  const result: AxiosParallelResponse[] = [];
 
   await items.reduce(
-    (acc, item) => acc.then(() => fn(item).then((res: any) => result.push(res))),
+    (acc, item) =>
+      acc.then(async () => {
+        const res = await fn(item);
+        result.push(res as AxiosParallelResponse);
+      }),
     Promise.resolve()
   );
 
   return result;
 }
 
-async function fetchAll(requests: AxiosRequestConfig[], chunk_size: number) {
-  const chunks: any = [];
+async function start(): Promise<AxiosParallelResponse[]> {
+  try {
+    const result: AxiosParallelResponse[] = [];
+    const chunks: AxiosRequestConfig[][] = [];
 
-  // Validate chunk size
-  chunk_size = toFinite(chunk_size) || 25;
+    for (let i = 0; i < requests.length; i += limit) {
+      chunks.push(requests.slice(i, i + limit));
+    }
 
-  // Chunk Array
-  for (let i = 0; i < requests.length; i += chunk_size) {
-    chunks.push(requests.slice(i, i + chunk_size));
+    await series(chunks, async (chunk: AxiosRequestConfig[]) => {
+      const promises = chunk.map((item: AxiosRequestConfig) => fetch(item));
+      const res = await Promise.all(promises);
+
+      res.forEach((r) => result.push(r));
+    });
+
+    return result;
+  } catch (error) {
+    console.log(error);
+    return [];
   }
+}
 
-  let result: any = [];
-
-  await series(chunks, (chunk: AxiosRequestConfig[]) => {
-    const promises = chunk.map((item: AxiosRequestConfig) => fetch(item));
-
-    return Promise.all(promises).then((res) => {
-      result = result.concat(res);
-    });
+start()
+  .then((res) => {
+    parentPort?.postMessage(res);
+  })
+  .catch((error) => {
+    console.log(error);
+    parentPort?.postMessage([]);
   });
-
-  return result;
-}
-
-if (parentPort) {
-  fetchAll(workerData.requests, workerData.limit)
-    .then((res: any) => parentPort?.postMessage(res))
-    .catch((error: any) => {
-      console.log('Thread Worker Failed.', error.message);
-      parentPort?.postMessage([]);
-    });
-}

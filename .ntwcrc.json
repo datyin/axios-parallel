@@ -1,0 +1,31 @@
+{
+  "target": "8.10.0",
+  "module": "commonjs",
+  "structure": {
+    "bundle": "./bundle",
+    "distribution": "./dist",
+    "source": "./src",
+    "resources": []
+  },
+  "builder": {
+    "bundle": true,
+    "updateBeforeCompile": false,
+    "cleanBeforeCompile": true
+  },
+  "npm": {
+    "publish": true,
+    "private": false
+  },
+  "entries": [
+    {
+      "script": "index",
+      "runAfterDevBuild": true,
+      "runAfterBuild": false
+    },
+    {
+      "script": "fetch.worker",
+      "runAfterDevBuild": false,
+      "runAfterBuild": false
+    }
+  ]
+}
